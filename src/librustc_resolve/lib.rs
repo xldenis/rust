@@ -124,6 +124,8 @@ struct TypoSuggestion {
 
     /// An appropriate article to refer to the binding ("a", "an", etc.)
     article: &'static str,
+
+    span: Option<Span>,
 }
 
 impl PartialOrd for BindingError {
@@ -4116,6 +4118,7 @@ impl<'a> Resolver<'a> {
                             candidate: ident.name,
                             article: binding.def().article(),
                             kind: binding.def().kind_name(),
+                            span: Some(binding.span),
                         });
                     }
                 }
@@ -4134,6 +4137,7 @@ impl<'a> Resolver<'a> {
                             candidate: ident.name,
                             article: def.article(),
                             kind: def.kind_name(),
+                            span: None,
                         });
                     }
                 }
@@ -4161,6 +4165,7 @@ impl<'a> Resolver<'a> {
                                                 candidate: ident.name,
                                                 article: "a",
                                                 kind: "crate",
+                                                span: None,
                                             })
                                         } else {
                                             None
@@ -4184,6 +4189,7 @@ impl<'a> Resolver<'a> {
                             candidate: *name,
                             article: "a",
                             kind: "primitive type",
+                            span: None,
                         }
                     })
                 )

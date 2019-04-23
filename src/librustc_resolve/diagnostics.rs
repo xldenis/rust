@@ -206,12 +206,19 @@ impl<'a> Resolver<'a> {
         // Try Levenshtein algorithm.
         let suggestion = self.lookup_typo_candidate(path, ns, is_expected, span);
         if let Some(suggestion) = suggestion {
+
             let msg = format!(
                 "{} {} with a similar name exists",
                 suggestion.article, suggestion.kind
             );
+            let sugg_span = if suggestion.candidate.to_string().as_bytes()[0] == b'_' {
+                suggestion.span.unwrap_or(ident_span)
+            } else
+            {
+                ident_span
+            };
             err.span_suggestion(
-                ident_span,
+                sugg_span,
                 &msg,
                 suggestion.candidate.to_string(),
                 Applicability::MaybeIncorrect,
