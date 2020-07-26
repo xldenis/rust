@@ -377,6 +377,12 @@ impl ExtraComments<'tcx> {
 
 impl Visitor<'tcx> for ExtraComments<'tcx> {
     fn visit_constant(&mut self, constant: &Constant<'tcx>, location: Location) {
+        let const_ty = constant.literal.ty;
+
+        if const_ty.is_integral() || const_ty.is_bool() || const_ty.is_char() {
+            return;
+        }
+
         self.super_constant(constant, location);
         let Constant { span, user_ty, literal } = constant;
         self.push("mir::Constant");
